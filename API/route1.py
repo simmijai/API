@@ -92,8 +92,8 @@ def insert():
         connection.close()
         return redirect(url_for('home'))
    
-@bp.route('/update',methods=['POST'])
-def update():
+@bp.route('/update/<int:id>',methods=['POST'])
+def update(id):
     connection = get_connection1()
     cursor = connection.cursor()
     if request.method == 'POST':
@@ -105,17 +105,28 @@ def update():
                 filename = secure_filename(f.filename)
                 file_path = os.path.join(UPLOAD_FOLDER, filename)
                 f.save(file_path)
-                cursor.execute("UPDATE data SET name=%s, image=%s, about=%s WHERE id=%s", (name, filename, about, id))
+                cursor.execute("UPDATE data SET name=%s, price=%s, image=%s WHERE id=%s", (product_name, product_price, filename, id))
             else:
                 flash('Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.')
         else:
-            cursor.execute("UPDATE data SET name=%s, price=%s, imsge=%s WHERE id=%s", (product_name, product_price, f))
+            cursor.execute("UPDATE data SET name=%s, price=%s, image=%s WHERE id=%s", (product_name, product_price, f))
         
         connection.commit()
         cursor.close()
         connection.close()
         flash('Data updated successfully!')
         return redirect(url_for('index'))
+
+
+ @bp.route('/delete/<int:id>',methods=['POST'])
+def delete(id):
+    connection=get_connection()
+    cursor=connection.cursor()
+    cursor.execute('delete from data where id=%s',(id,))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
     
 
 
