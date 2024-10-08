@@ -119,13 +119,26 @@ def update(id):
 
 
  @bp.route('/delete/<int:id>',methods=['POST'])
-def delete(id):
+ def delete(id):
     connection=get_connection()
     cursor=connection.cursor()
     cursor.execute('delete from data where id=%s',(id,))
     connection.commit()
     cursor.close()
     connection.close()
+
+@bp.route('/AddToCart/<int:id>',methods=['POST'])
+def AddCart(id):
+    connection = get_connection1()
+    cursor = connection.cursor()
+    if request.method == 'POST':
+        product_name=request.form.get('name')
+        product_price=request.form.get('price')
+        f = request.files.get('image')
+        
+
+
+
 
     
 
